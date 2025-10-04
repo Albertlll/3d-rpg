@@ -1,59 +1,70 @@
-import { CapsuleCollider, RapierRigidBody, RigidBody } from "@react-three/rapier";
+import { useFrame } from "@react-three/fiber";
+import { type RapierRigidBody, RigidBody } from "@react-three/rapier";
 import { useRef } from "react";
-import { Mesh } from "three";
-import { usePersonControls } from "../hooks/move-hook";
 import { Vector3 } from "three";
-
-import {useFrame} from "@react-three/fiber";
-import { useEnemiesStore } from "../../../../stores/enemies-store";
-
-const MOVE_SPEED = 5;
-const direction = new Vector3();
-const frontVector = new Vector3();
-const sideVector = new Vector3();
+import { usePersonControls } from "../hooks/move-hook";
 
 function Player() {
-
-    const playerRef = useRef< RapierRigidBody | null>(null);
-
-    const { forward, backward, left, right, jump } = usePersonControls();
-
-    const { setAngle } = useEnemiesStore();
-    
-    useFrame((state) => {
-        if (!playerRef.current) return;
-
-        const velocity = playerRef.current.linvel();
-
-        frontVector.set(0, 0, Number(backward) - Number(forward));
-        sideVector.set(Number(left) - Number(right), 0, 0);
-        direction.subVectors(frontVector, sideVector).normalize().multiplyScalar(MOVE_SPEED).applyEuler(state.camera.rotation);
-
-        playerRef.current.wakeUp();
-        playerRef.current.setLinvel({ x: direction.x, y: velocity.y, z: direction.z }, true);
+	const playerRef = useRef<RapierRigidBody | null>(null);
+	const controls = usePersonControls();
 
 
-        const { x, y, z } = playerRef.current.translation();
+	useFrame((state) => {
+		if (!playerRef.current) return;
 
-        state.camera.position.set(x, y, z);
+		const speed = 9;
+		const velocity = new Vector3();
 
-        setAngle(10)
-        
-    });
+		const cameraDirection = new Vector3();
+		state.camera.getWorldDirection(cameraDirection);
+		cameraDirection.y = 0;
+		cameraDirection.normalize();
 
-    return (
-        <>
+		const rightDirection = new Vector3();
+		rightDirection.crossVectors(cameraDirection, new Vector3(0, 1, 0));
+		rightDirection.normalize();
 
-        <RigidBody ref={playerRef} position={[0, 0.75, 0]} >
-            <mesh>
-                {/* <meshStandardMaterial color="red" /> */}
-                <capsuleGeometry args={[0.75, 0.5]}/>
-                {/* <CapsuleCollider args={[0.75, 0.5]}/> */}
-            </mesh>
-        </RigidBody>
+		if (controls.forward) {
+			velocity.add(cameraDirection.clone().multiplyScalar(speed));
+		}
+		if (controls.backward) {
+			velocity.add(cameraDirection.clone().multiplyScalar(-speed));
+		}
 
-        </>
-    );
+		if (controls.left) {
+			velocity.add(rightDirection.clone().multiplyScalar(-speed));
+		}
+		if (controls.right) {
+			velocity.add(rightDirection.clone().multiplyScalar(speed));
+		}
+
+		if (controls.jump) {
+			const currentVelocity = playerRef.current.linvel();
+			if (Math.abs(currentVelocity.y) < 0.1) {
+				velocity.y = 100;
+			}
+		}
+
+		playerRef.current.setLinvel(velocity, true);
+
+		const playerPosition = playerRef.current.translation();
+		state.camera.position.set(playerPosition.x, playerPosition.y + 0.5, playerPosition.z);
+	});
+
+	return (
+		<>
+			<RigidBody
+				ref={playerRef}
+				type="dynamic"
+				position={[5, 0.75, 0]}
+				lockRotations
+			>
+				<mesh>
+					<capsuleGeometry args={[0.75, 0.5]} />
+				</mesh>
+			</RigidBody>
+		</>
+	);
 }
 
 export default Player;

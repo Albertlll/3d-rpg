@@ -1,48 +1,44 @@
-import { useRef } from "react";
-import { useEnemiesStore } from "../../../../../stores/enemies-store";
-import {useFrame} from "@react-three/fiber";
-import { Euler, Mesh, MeshBasicMaterial, Vector3 } from "three";
 import { useTexture } from "@react-three/drei";
-import cat from "./cat.png"
-function Enemy(props : {x : number, y : number, z : number}) {
+import { useFrame } from "@react-three/fiber";
+import { RigidBody } from "@react-three/rapier";
+import { useRef } from "react";
+import type { Mesh } from "three";
+import { NearestFilter } from "three";
+import spider from "./spider.png";
+function Enemy(props: { x: number; y: number; z: number }) {
+	const texture = useTexture(spider);
 
-    const texture = useTexture(cat)
+	texture.minFilter = NearestFilter;
+	texture.magFilter = NearestFilter;
 
+	const enemyRef = useRef<null | Mesh>(null);
 
+	useFrame((state) => {
+		if (!enemyRef.current) return;
 
-    const enemyRef = useRef<null | Mesh>(null);
+		// const cameraPos = state.camera.position;
+		// const enemyPos = enemyRef.current.position;
 
-    useFrame((state) => {
-        if (!enemyRef.current) return;
+		enemyRef.current.lookAt(state.camera.position);
 
+		// const r = Math.sqrt((enemyPos.x - cameraPos.x) ** 2 - (enemyPos.y - cameraPos.y) ** 2 )
 
-        const cameraPos = state.camera.position;
-        const enemyPos = enemyRef.current.position;
+		// console.log(r - enemyPos.x ** 2)
+		// console.log(enemyPos.x)
 
+		// console.log(enemyRef.current.normalMatrix)
 
-        enemyRef.current.lookAt(state.camera.position)
+		// enemyRef.current.rotation.y = newAngle
+	});
 
-
-        // const r = Math.sqrt((enemyPos.x - cameraPos.x) ** 2 - (enemyPos.y - cameraPos.y) ** 2 )
-
-        // console.log(r - enemyPos.x ** 2)
-        // console.log(enemyPos.x)
-
-        // console.log(enemyRef.current.normalMatrix)
-
-        // enemyRef.current.rotation.y = newAngle
-
-        
-    });
-
-    return (
-        <mesh ref={enemyRef} position={[props.x, props.y, props.z]}>
-
-            <planeGeometry/>
-            <meshStandardMaterial map={texture} transparent/>
-        
-        </mesh>
-    );
+	return (
+		<RigidBody type="dynamic">
+			<mesh ref={enemyRef} position={[props.x, props.y, props.z]}>
+				<planeGeometry />
+				<meshStandardMaterial map={texture} transparent />
+			</mesh>
+		</RigidBody>
+	);
 }
 
 export default Enemy;
