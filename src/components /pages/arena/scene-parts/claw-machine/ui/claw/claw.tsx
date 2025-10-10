@@ -2,6 +2,7 @@ import { RigidBody } from "@react-three/rapier";
 import { useRef, useState, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Mesh, Group } from "three";
+import { craneMaterial } from "../../materials";
 import { useStore } from "effector-react";
 import { $gameState, endGame } from "../../../../../../../stores/game-state-store";
 
@@ -15,12 +16,6 @@ const ROTATE_LERP = 20; // скорость анимации раскрытия/
 type Phase = "idle" | "lowering" | "raising";
 
 const Claw = () => {
-	// Цвета
-	const bodyColor = "#2c3e50";
-	const cableColor = "#7f8c8d";
-
-	const gameState = useStore($gameState);
-
 	// Состояние системы
 	const [phase, setPhase] = useState<Phase>("idle");
 	const [isOpen, setIsOpen] = useState(true); // старт: открыта
@@ -117,7 +112,7 @@ const Claw = () => {
 				{/* Крышка автомата */}
 				<mesh position={[0, 1.45, 0]}>
 					<boxGeometry args={[1.02, 0.1, 1.02]} />
-					<meshStandardMaterial color={bodyColor} />
+					<primitive object={craneMaterial} />
 				</mesh>
 
 				{/* Вся система хваталки */}
@@ -126,7 +121,7 @@ const Claw = () => {
 					{/* Трос (начинается от крышки) */}
 					<mesh ref={cableRef} position={[0, 0.15, 0]}>
 						<cylinderGeometry args={[0.01, 0.01, 1]} />
-						<meshStandardMaterial color={cableColor} />
+						<primitive object={craneMaterial} />
 					</mesh>
 
 					{/* Голова клешни (узел), положение обновляется от длины троса */}
@@ -134,7 +129,7 @@ const Claw = () => {
 						{/* Центральная втулка */}
 						<mesh position={[0, 0.1, 0]}>
 							<cylinderGeometry args={[0.05, 0.12, 0.12]} />
-							<meshStandardMaterial color={cableColor} />
+							<primitive object={craneMaterial} />
 						</mesh>
 
 						{/* Три зубца через 120° вокруг оси Y */}
@@ -143,7 +138,7 @@ const Claw = () => {
 								{/* смещение зубца радиально от центра */}
 								<mesh ref={prongRefs[i]} position={[0.11, 0, 0]} rotation={[0, 0, OPEN_ANGLE]}>
 									<boxGeometry args={[0.04, 0.2, 0.04]} />
-									<meshStandardMaterial color={cableColor} />
+									<primitive object={craneMaterial} />
 								</mesh>
 							</group>
 						))}

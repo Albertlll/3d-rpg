@@ -1,4 +1,4 @@
-import { PointerLockControls } from "@react-three/drei";
+import { PointerLockControls, Environment } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 import { useStore } from "effector-react";
@@ -28,6 +28,33 @@ function Arena() {
 					<Player />
 					<PointerLockControls />
 					<ambientLight intensity={1.5} />
+					
+					{/* Направленный свет для создания теней и объема */}
+					<directionalLight 
+						position={[5, 10, 7]} 
+						intensity={1.2} 
+						castShadow 
+						shadow-mapSize-width={1024}
+						shadow-mapSize-height={1024}
+					/>
+					
+					{/* Точечный свет над клешневой машиной */}
+					<pointLight 
+						position={[0, 3, 0]} 
+						intensity={0.8} 
+						color="#3498db"
+					/>
+					
+					{/* Точечный свет сбоку для дополнительного освещения */}
+					<pointLight 
+						position={[-3, 2, -3]} 
+						intensity={0.5} 
+						color="#e74c3c"
+					/>
+					
+					{/* Окружающая среда для отражений */}
+					<Environment preset="city" />
+					
 					<axesHelper args={[5]} />
 					<gridHelper args={[20, 20]} />
 					<Ground />

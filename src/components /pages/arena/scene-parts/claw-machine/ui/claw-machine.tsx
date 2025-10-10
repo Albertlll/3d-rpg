@@ -1,6 +1,7 @@
 import { RigidBody } from "@react-three/rapier";
 import { useRef, useState } from "react";
 import { Group } from "three";
+import { craneMaterial, glassMaterial, bodyMaterial, controlPanelMaterial } from "../materials";
 import { startGame } from "../../../../../../stores/game-state-store";
 const ClawMachine = () => {
 	const machineRef = useRef<Group>(null);
@@ -40,46 +41,46 @@ const ClawMachine = () => {
 				{/* Боковые стенки */}
 				<mesh position={[0, 0.7, 0.5]}>
 					<boxGeometry args={[0.98, 1.4, 0.02]} />
-					<meshStandardMaterial color={colors.glassWalls} transparent opacity={0.3} />
+					<primitive object={glassMaterial} />
 				</mesh>
 
 				{/* Задняя стенка */}
 				<mesh position={[0, 0.7, -0.5]}>
 					<boxGeometry args={[0.98, 1.4, 0.02]} />
-					<meshStandardMaterial color={colors.glassWalls} transparent opacity={0.3} />
+					<primitive object={glassMaterial} />
 				</mesh>
 
 				{/* Левая стенка */}
 				<mesh position={[-0.5, 0.7, 0]}>
 					<boxGeometry args={[0.02, 1.4, 0.98]} />
-					<meshStandardMaterial color={colors.glassWalls} transparent opacity={0.3} />
+					<primitive object={glassMaterial} />
 				</mesh>
 
 				{/* Правая стенка */}
 				<mesh position={[0.5, 0.7, 0]}>
 					<boxGeometry args={[0.02, 1.4, 0.98]} />
-					<meshStandardMaterial color={colors.glassWalls} transparent opacity={0.3} />
+					<primitive object={glassMaterial} />
 				</mesh>
 
 				{/* Штыри между стенками */}
 				<mesh position={[-0.5, 0.7, 0.5]}>
 					<boxGeometry args={[0.02, 1.4, 0.02]} />
-					<meshStandardMaterial color={colors.mainBody} />
+					<primitive object={bodyMaterial} />
 				</mesh>
 
 				<mesh position={[0.5, 0.7, 0.5]}>
 					<boxGeometry args={[0.02, 1.4, 0.02]} />
-					<meshStandardMaterial color={colors.mainBody} />
+					<primitive object={bodyMaterial} />
 				</mesh>
 
 				<mesh position={[-0.5, 0.7, -0.5]}>
 					<boxGeometry args={[0.02, 1.4, 0.02]} />
-					<meshStandardMaterial color={colors.mainBody} />
+					<primitive object={bodyMaterial} />
 				</mesh>
 
 				<mesh position={[0.5, 0.7, -0.5]}>
 					<boxGeometry args={[0.02, 1.4, 0.02]} />
-					<meshStandardMaterial color={colors.mainBody} />
+					<primitive object={bodyMaterial} />
 				</mesh>
 
 				{/* Кнопка для запуска игры */}
