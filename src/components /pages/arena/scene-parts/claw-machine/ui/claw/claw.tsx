@@ -2,6 +2,8 @@ import { RigidBody } from "@react-three/rapier";
 import { useRef, useState, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Mesh, Group } from "three";
+import { useStore } from "effector-react";
+import { $gameState, endGame } from "../../../../../../../stores/game-state-store";
 
 const BOUNDS = 0.3; // безопасные границы по X/Z внутри контейнера
 const INITIAL_CABLE_LENGTH = 0.3; // начальная длина троса до головы
@@ -17,6 +19,7 @@ const Claw = () => {
 	const bodyColor = "#2c3e50";
 	const cableColor = "#7f8c8d";
 
+	const gameState = useStore($gameState);
 
 	// Состояние системы
 	const [phase, setPhase] = useState<Phase>("idle");
@@ -33,6 +36,9 @@ const Claw = () => {
 	// Управление: стрелки двигают систему, Enter запускает цикл вниз/вверх
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
+			// Разрешаем управление только во время игры
+			if (gameState !== "playing") return;
+
 			if (event.code === "Enter") {
 				if (phase === "idle") {
 					setIsOpen(true); // при опускании клешня открывается
@@ -53,7 +59,7 @@ const Claw = () => {
 
 		document.addEventListener("keydown", handleKeyDown);
 		return () => document.removeEventListener("keydown", handleKeyDown);
-	}, [phase]);
+	}, [phase, gameState]);
 
 	// Анимация: фазы опускания/подъема и раскрытие/закрытие зубцов
 	useFrame((_, delta) => {
@@ -70,6 +76,8 @@ const Claw = () => {
 			if (next <= 0) {
 				setIsOpen(true); // вернулись в исходное: открыта
 				setPhase("idle");
+				// Завершаем игру после завершения цикла клешни
+				endGame();
 			}
 		}
 

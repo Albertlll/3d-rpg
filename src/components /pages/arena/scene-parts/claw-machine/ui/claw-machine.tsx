@@ -1,9 +1,11 @@
 import { RigidBody } from "@react-three/rapier";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Group } from "three";
+import { startGame } from "../../../../../../../stores/game-state-store";
 
 const ClawMachine = () => {
 	const machineRef = useRef<Group>(null);
+	const [isButtonHovered, setIsButtonHovered] = useState(false);
 
 	// Цвета автомата
 	const colors = {
@@ -14,7 +16,7 @@ const ClawMachine = () => {
 		coinSlot: "#f39c12",       // Зона для мелочи
 		cardSlot: "#3498db",       // Зона для карты
 		joystick: "#e67e22",       // Джойстик
-		button: "#e74c3c",        // Кнопка
+		button: isButtonHovered ? "#ff6b6b" : "#e74c3c",        // Кнопка (подсвечивается при наведении)
 		toys: {
 			bear: "#8e44ad",      // Медведь
 			cube: "#f39c12",      // Кубик
@@ -22,11 +24,21 @@ const ClawMachine = () => {
 		}
 	};
 
+	// Обработчик клика по кнопке
+	const handleButtonClick = () => {
+		startGame();
+	};
+
 	return (
 		<RigidBody type="fixed" position={[0, 1, 0]}>
 			<group ref={machineRef}>
-
-
+				{/* Основной корпус */}
+				<mesh position={[0, 0, 0]}>
+					<boxGeometry args={[1, 0.1, 1]} />
+					<meshStandardMaterial color={colors.mainBody} />
+				</mesh>
+				
+				{/* Боковые стенки */}
 				<mesh position={[0, 0.7, 0.5]}>
 					<boxGeometry args={[0.98, 1.4, 0.02]} />
 					<meshStandardMaterial color={colors.glassWalls} transparent opacity={0.3} />
@@ -69,6 +81,17 @@ const ClawMachine = () => {
 				<mesh position={[0.5, 0.7, -0.5]}>
 					<boxGeometry args={[0.02, 1.4, 0.02]} />
 					<meshStandardMaterial color={colors.mainBody} />
+				</mesh>
+				
+				{/* Кнопка для запуска игры */}
+				<mesh 
+					position={[0, 0.8, 0.45]}
+					onPointerEnter={() => setIsButtonHovered(true)}
+					onPointerLeave={() => setIsButtonHovered(false)}
+					onClick={handleButtonClick}
+				>
+					<cylinderGeometry args={[0.05, 0.05, 0.05]} />
+					<meshStandardMaterial color={colors.button} />
 				</mesh>
 			</group>
 		</RigidBody>
