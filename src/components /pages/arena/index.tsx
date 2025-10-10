@@ -3,15 +3,14 @@ import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 import { useStore } from "effector-react";
 import Inventory from "./arena-ui/inventory";
-import ClawMachine  from "./scene-parts/claw-machine";
+import ClawMachine from "./scene-parts/claw-machine";
 import Ground from "./scene-parts/ground";
 import Player from "./scene-parts/player";
-import { $gameState } from "../../stores/game-state-store";
+import { $gameState } from "../../../stores/game-state-store";
 import ClawControlsUI from "./scene-parts/claw-machine/ui/control-box/controls/claw-controls-ui";
 import WaitingUI from "./arena-ui/waiting-ui";
 
 function Arena() {
-	const gameState = useStore($gameState);
 
 	return (
 		<>
@@ -27,7 +26,7 @@ function Arena() {
 					{" "}
 					{/* Включаем гравитацию для локальной работы */}
 					<Player />
-					{gameState === "playing" && <PointerLockControls />}
+					<PointerLockControls />
 					<ambientLight intensity={1.5} />
 					<axesHelper args={[5]} />
 					<gridHelper args={[20, 20]} />

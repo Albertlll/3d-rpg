@@ -1,8 +1,7 @@
 import { RigidBody } from "@react-three/rapier";
 import { useRef, useState } from "react";
 import { Group } from "three";
-import { startGame } from "../../../../../../../stores/game-state-store";
-
+import { startGame } from "../../../../../../stores/game-state-store";
 const ClawMachine = () => {
 	const machineRef = useRef<Group>(null);
 	const [isButtonHovered, setIsButtonHovered] = useState(false);
@@ -37,25 +36,25 @@ const ClawMachine = () => {
 					<boxGeometry args={[1, 0.1, 1]} />
 					<meshStandardMaterial color={colors.mainBody} />
 				</mesh>
-				
+
 				{/* Боковые стенки */}
 				<mesh position={[0, 0.7, 0.5]}>
 					<boxGeometry args={[0.98, 1.4, 0.02]} />
 					<meshStandardMaterial color={colors.glassWalls} transparent opacity={0.3} />
 				</mesh>
-				
+
 				{/* Задняя стенка */}
 				<mesh position={[0, 0.7, -0.5]}>
 					<boxGeometry args={[0.98, 1.4, 0.02]} />
 					<meshStandardMaterial color={colors.glassWalls} transparent opacity={0.3} />
 				</mesh>
-				
+
 				{/* Левая стенка */}
 				<mesh position={[-0.5, 0.7, 0]}>
 					<boxGeometry args={[0.02, 1.4, 0.98]} />
 					<meshStandardMaterial color={colors.glassWalls} transparent opacity={0.3} />
 				</mesh>
-				
+
 				{/* Правая стенка */}
 				<mesh position={[0.5, 0.7, 0]}>
 					<boxGeometry args={[0.02, 1.4, 0.98]} />
@@ -67,25 +66,25 @@ const ClawMachine = () => {
 					<boxGeometry args={[0.02, 1.4, 0.02]} />
 					<meshStandardMaterial color={colors.mainBody} />
 				</mesh>
-				
+
 				<mesh position={[0.5, 0.7, 0.5]}>
 					<boxGeometry args={[0.02, 1.4, 0.02]} />
 					<meshStandardMaterial color={colors.mainBody} />
 				</mesh>
-				
+
 				<mesh position={[-0.5, 0.7, -0.5]}>
 					<boxGeometry args={[0.02, 1.4, 0.02]} />
 					<meshStandardMaterial color={colors.mainBody} />
 				</mesh>
-				
+
 				<mesh position={[0.5, 0.7, -0.5]}>
 					<boxGeometry args={[0.02, 1.4, 0.02]} />
 					<meshStandardMaterial color={colors.mainBody} />
 				</mesh>
-				
+
 				{/* Кнопка для запуска игры */}
-				<mesh 
-					position={[0, 0.8, 0.45]}
+				<mesh
+					position={[0.6, -0.25, 0.1]}
 					onPointerEnter={() => setIsButtonHovered(true)}
 					onPointerLeave={() => setIsButtonHovered(false)}
 					onClick={handleButtonClick}
