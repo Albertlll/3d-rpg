@@ -33,10 +33,6 @@ const ClawMachine = () => {
 		<RigidBody type="fixed" position={[0, 1, 0]}>
 			<group ref={machineRef}>
 				{/* Основной корпус */}
-				<mesh position={[0, 0, 0]}>
-					<boxGeometry args={[1, 0.1, 1]} />
-					<meshStandardMaterial color={colors.mainBody} />
-				</mesh>
 
 				{/* Боковые стенки */}
 				<mesh position={[0, 0.7, 0.5]}>

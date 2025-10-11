@@ -2,10 +2,10 @@ import { MeshStandardMaterial } from "three";
 
 // Металлический материал для крана
 export const craneMaterial = new MeshStandardMaterial({
-  color: "#e74c3c", // красный цвет
-  metalness: 0.9,   // высокая металличность
+  color: "#c0c0c0", // красный цвет
+  metalness: 0,   // высокая металличность
   roughness: 0.1,   // низкая шероховатость
-  emissive: "#000000" // нет свечения
+  emissive: "#" // нет свечения
 });
 
 // Улучшенный стеклянный материал
