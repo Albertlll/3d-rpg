@@ -9,8 +9,15 @@ import Player from "./scene-parts/player";
 import { $gameState } from "../../../stores/game-state-store";
 import ClawControlsUI from "./scene-parts/claw-machine/ui/control-box/controls/claw-controls-ui";
 import WaitingUI from "./arena-ui/waiting-ui";
+import { TextureLoader } from "three";
 
 function Arena() {
+
+	const loader = new TextureLoader();
+
+	const environmentTexture = loader.load('./lilienstein_1k.exr');
+
+	console.log(environmentTexture)
 
 	return (
 		<>
@@ -28,33 +35,33 @@ function Arena() {
 					<Player />
 					<PointerLockControls />
 					<ambientLight intensity={1.5} />
-					
+
 					{/* Направленный свет для создания теней и объема */}
-					<directionalLight 
-						position={[5, 10, 7]} 
-						intensity={1.2} 
-						castShadow 
+					<directionalLight
+						position={[5, 10, 7]}
+						intensity={1.2}
+						castShadow
 						shadow-mapSize-width={1024}
 						shadow-mapSize-height={1024}
 					/>
-					
+
 					{/* Точечный свет над клешневой машиной */}
-					<pointLight 
-						position={[0, 3, 0]} 
-						intensity={0.8} 
+					<pointLight
+						position={[0, 3, 0]}
+						intensity={0.8}
 						color="#3498db"
 					/>
-					
+
 					{/* Точечный свет сбоку для дополнительного освещения */}
-					<pointLight 
-						position={[-3, 2, -3]} 
-						intensity={0.5} 
+					<pointLight
+						position={[-3, 2, -3]}
+						intensity={0.5}
 						color="#e74c3c"
 					/>
-					
+
 					{/* Окружающая среда для отражений */}
-					<Environment preset="city" />
-					
+					<Environment map={environmentTexture} />
+
 					<axesHelper args={[5]} />
 					<gridHelper args={[20, 20]} />
 					<Ground />

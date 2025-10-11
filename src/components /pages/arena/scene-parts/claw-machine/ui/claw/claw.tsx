@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Mesh, Group } from "three";
 import { craneMaterial } from "../../materials";
-import { useStore } from "effector-react";
+import { useStore, useUnit } from "effector-react";
 import { $gameState, endGame } from "../../../../../../../stores/game-state-store";
 
 const BOUNDS = 0.3; // безопасные границы по X/Z внутри контейнера
@@ -27,6 +27,8 @@ const Claw = () => {
 	const clawSystemRef = useRef<Group>(null);
 	const cableRef = useRef<Mesh>(null);
 	const prongRefs = [useRef<Mesh>(null), useRef<Mesh>(null), useRef<Mesh>(null)];
+
+	const gameState = useUnit($gameState);
 
 	// Управление: стрелки двигают систему, Enter запускает цикл вниз/вверх
 	useEffect(() => {
