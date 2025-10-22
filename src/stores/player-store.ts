@@ -27,6 +27,8 @@ const $weaponList = createStore<Array<IWeapon>>([
 const nextRightWeapon = createEvent<void>();
 const nextLeftWeapon = createEvent<void>();
 const setCurrentWeapon = createEvent<number>();
+const selectWeapon1 = createEvent<void>();
+const selectWeapon2 = createEvent<void>();
 
 sample({
 	clock: nextRightWeapon,
@@ -50,11 +52,25 @@ sample({
 	target: $currentWeaponIndex,
 });
 
+sample({
+	clock: selectWeapon1,
+	fn: () => 0,
+	target: $currentWeaponIndex,
+});
+
+sample({
+	clock: selectWeapon2,
+	fn: () => 1,
+	target: $currentWeaponIndex,
+});
+
 // Экспортируем все необходимое
-export { 
-	$currentWeaponIndex, 
-	$weaponList, 
-	nextRightWeapon, 
-	nextLeftWeapon, 
-	setCurrentWeapon 
+export {
+	$currentWeaponIndex,
+	$weaponList,
+	nextRightWeapon,
+	nextLeftWeapon,
+	setCurrentWeapon,
+	selectWeapon1,
+	selectWeapon2
 };

@@ -1,7 +1,8 @@
 import { PointerLockControls, Environment } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
-import { useStore } from "effector-react";
+import { useUnit } from "effector-react";
+import { useEffect } from "react";
 import Inventory from "./arena-ui/inventory";
 import AttemptsTimer from "./arena-ui/attempts-timer";
 import ClawMachine from "./scene-parts/claw-machine";
@@ -10,15 +11,43 @@ import Player from "./scene-parts/player";
 import { $gameState } from "../../../stores/game-state-store";
 import ClawControlsUI from "./scene-parts/claw-machine/ui/control-box/controls/claw-controls-ui";
 import WaitingUI from "./arena-ui/waiting-ui";
+import Notifications from "./arena-ui/notifications";
 import { TextureLoader } from "three";
+import { selectWeapon1, selectWeapon2 } from "../../../stores/player-store";
 
 function Arena() {
-
+    const gameState = useUnit($gameState);
     const loader = new TextureLoader();
 
     const environmentTexture = loader.load('./lilienstein_1k.exr');
 
     console.log(environmentTexture)
+
+    // Хук для обработки клавиш инвентаря
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            // Обрабатываем только если игра активна
+
+            switch (event.key) {
+                case "1":
+                    selectWeapon1();
+                    break;
+                case "2":
+                    selectWeapon2();
+                    break;
+                default:
+                    break;
+            }
+        };
+
+        // Добавляем обработчик событий
+        document.addEventListener("keydown", handleKeyDown);
+
+        // Убираем обработчик при размонтировании
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [gameState]);
 
     return (
         <>
@@ -75,6 +104,7 @@ function Arena() {
             <AttemptsTimer />
             <ClawControlsUI />
             <WaitingUI />
+            <Notifications />
         </>
     );
 }

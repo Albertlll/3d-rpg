@@ -1,9 +1,9 @@
-import { RigidBody } from "@react-three/rapier";
+import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import { useRef, useState } from "react";
 import { Group } from "three";
-import { craneMaterial, glassMaterial, bodyMaterial, controlPanelMaterial } from "../materials";
+import { glassMaterial, bodyMaterial } from "../materials";
 import { startGame } from "../../../../../../stores/game-state-store";
-import { startAttempts } from "../../../../../../stores/attempts-timer-store";
+import Toys from "./toys.tsx";
 const ClawMachine = () => {
     const machineRef = useRef<Group>(null);
     const [isButtonHovered, setIsButtonHovered] = useState(false);
@@ -27,7 +27,7 @@ const ClawMachine = () => {
 
     // Обработчик клика по кнопке
     const handleButtonClick = () => {
-        startAttempts();
+        startGame();
     };
 
     return (
@@ -90,6 +90,23 @@ const ClawMachine = () => {
                     <cylinderGeometry args={[0.05, 0.05, 0.05]} />
                     <meshStandardMaterial color={colors.button} />
                 </mesh>
+
+                {/* Физический пол и стенки внутри автомата (коллайдеры) */}
+                <>
+                    {/* Пол внутри автомата (тонкая плита) */}
+                    <CuboidCollider args={[0.49, 0.05, 0.49]} position={[0, 0.05, 0]} />
+                    {/* Задняя стенка */}
+                    <CuboidCollider args={[0.49, 0.7, 0.01]} position={[0, 0.7, -0.49]} />
+                    {/* Передняя стенка */}
+                    <CuboidCollider args={[0.49, 0.7, 0.01]} position={[0, 0.7, 0.49]} />
+                    {/* Левая стенка */}
+                    <CuboidCollider args={[0.01, 0.7, 0.49]} position={[-0.49, 0.7, 0]} />
+                    {/* Правая стенка */}
+                    <CuboidCollider args={[0.01, 0.7, 0.49]} position={[0.49, 0.7, 0]} />
+                </>
+
+                {/* Игрушки на дне автомата */}
+                <Toys />
             </group>
         </RigidBody>
     );

@@ -18,9 +18,9 @@ export const usePersonControls = () => {
 			KeyD: "right",
 			Space: "jump",
 		};
-		
+
 		const moveFieldByKey = (key: keyof typeof keys) => keys[key];
-		
+
 		const setMovementStatus = (code: keyof typeof keys, status: boolean) => {
 			setMovement((m) => ({ ...m, [code]: status }));
 		};

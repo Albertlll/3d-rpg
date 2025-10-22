@@ -1,14 +1,14 @@
 import { useUnit } from "effector-react";
-import { $attemptsTimerState } from "../../../../../../stores/attempts-timer-store";
+import { $attemptsTimerState } from "../../../../../stores/attempts-timer-store";
 
 function AttemptsTimer() {
-  const { attempts, timer, isTimerRunning } = useUnit($attemptsTimerState);
+  const { attempts, currentAttempt, timer, isTimerRunning } = useUnit($attemptsTimerState);
 
   return (
     <div className="w-full flex items-center justify-center absolute top-4 gap-3">
       <div className="bg-slate-800/80 text-white p-3 rounded-lg flex items-center gap-2">
-        <span className="font-bold">Попытки:</span>
-        <span className="text-xl">{attempts}</span>
+        <span className="font-bold">Попытка:</span>
+        <span className="text-xl">{currentAttempt}/3</span>
       </div>
       <div className="bg-slate-800/80 text-white p-3 rounded-lg flex items-center gap-2">
         <span className="font-bold">Таймер:</span>
