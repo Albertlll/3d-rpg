@@ -2,11 +2,17 @@ import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import { useRef, useState } from "react";
 import { Group } from "three";
 import { glassMaterial, bodyMaterial } from "../materials";
-import { startGame } from "../../../../../../stores/game-state-store";
+import { requestStartGame } from "../../../../../../stores/game-state-store";
+import { $wallet } from "../../../../../../stores/wallet-store";
+import { useUnit } from "effector-react";
 import Toys from "./toys.tsx";
 const ClawMachine = () => {
     const machineRef = useRef<Group>(null);
     const [isButtonHovered, setIsButtonHovered] = useState(false);
+    const wallet = useUnit($wallet);
+    
+    const GAME_COST = 50;
+    const canStartGame = wallet >= GAME_COST;
 
     // Цвета автомата
     const colors = {
@@ -17,7 +23,7 @@ const ClawMachine = () => {
         coinSlot: "#f39c12",       // Зона для мелочи
         cardSlot: "#3498db",       // Зона для карты
         joystick: "#e67e22",       // Джойстик
-        button: isButtonHovered ? "#ff6b6b" : "#e74c3c",        // Кнопка (подсвечивается при наведении)
+        button: !canStartGame ? "#666666" : isButtonHovered ? "#ff6b6b" : "#e74c3c",        // Кнопка (серая если нет денег)
         toys: {
             bear: "#8e44ad",      // Медведь
             cube: "#f39c12",      // Кубик
@@ -27,7 +33,9 @@ const ClawMachine = () => {
 
     // Обработчик клика по кнопке
     const handleButtonClick = () => {
-        startGame();
+        if (canStartGame) {
+            requestStartGame();
+        }
     };
 
     return (
@@ -83,7 +91,7 @@ const ClawMachine = () => {
                 {/* Кнопка для запуска игры */}
                 <mesh
                     position={[0.6, -0.25, 0.1]}
-                    onPointerEnter={() => setIsButtonHovered(true)}
+                    onPointerEnter={() => canStartGame && setIsButtonHovered(true)}
                     onPointerLeave={() => setIsButtonHovered(false)}
                     onClick={handleButtonClick}
                 >

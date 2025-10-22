@@ -3,8 +3,8 @@ import { Canvas } from "@react-three/fiber";
 import { Physics } from "@react-three/rapier";
 import { useUnit } from "effector-react";
 import { useEffect } from "react";
-import Inventory from "./arena-ui/inventory";
 import AttemptsTimer from "./arena-ui/attempts-timer";
+import MoneyCounter from "./arena-ui/money-counter";
 import ClawMachine from "./scene-parts/claw-machine";
 import Ground from "./scene-parts/ground";
 import Player from "./scene-parts/player";
@@ -100,7 +100,7 @@ function Arena() {
             </Canvas>
 
             {/* UI элементы */}
-            <Inventory />
+            <MoneyCounter />
             <AttemptsTimer />
             <ClawControlsUI />
             <WaitingUI />

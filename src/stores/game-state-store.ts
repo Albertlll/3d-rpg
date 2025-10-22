@@ -1,5 +1,7 @@
 import { createEvent, createStore, sample } from "effector";
 import { startAttempts, gameEnded, resetAttemptsTimer, stopTimer } from "./attempts-timer-store";
+import { $wallet, spendMoney } from "./wallet-store";
+import { notify } from "./notifications-store";
 
 // Типы состояний игры
 export type GameState = "waiting" | "playing";
@@ -10,6 +12,9 @@ const $gameState = createStore<GameState>("waiting");
 // Создаем события для изменения состояния игры
 const startGame = createEvent<void>();
 const endGame = createEvent<void>();
+
+// Событие запроса старта игры с проверкой баланса
+const requestStartGame = createEvent<void>();
 
 // Обработчики событий
 sample({
@@ -43,5 +48,30 @@ sample({
   target: [stopTimer, resetAttemptsTimer],
 });
 
+// Проверяем баланс перед стартом игры
+sample({
+  clock: requestStartGame,
+  source: $wallet,
+  fn: (balance) => {
+    const GAME_COST = 50;
+    if (balance >= GAME_COST) {
+      return { canStart: true, cost: GAME_COST };
+    }
+    return { canStart: false, cost: GAME_COST };
+  },
+}).watch(({ canStart, cost }) => {
+  if (canStart) {
+    // Списываем деньги и запускаем игру
+    spendMoney({ amount: cost });
+    startGame();
+  } else {
+    // Показываем уведомление о нехватке средств
+    notify({ 
+      type: "error", 
+      message: `Недостаточно средств! Нужно ${cost} монет для запуска игры.` 
+    });
+  }
+});
+
 // Экспортируем все необходимое
-export { $gameState, startGame, endGame };
+export { $gameState, startGame, endGame, requestStartGame };
